@@ -181,6 +181,7 @@ int main(int argc, char **argv)
 	for (i=0;i<1000;i++)
 	{
 		sprintf(Str,"timeseries/%.4d.txt", i);
-		N.generateTimeSequence(Str, 100);
+		N.generateTimeSequence(Str, 5000);
+        cout << i << endl;
 	}
 }
