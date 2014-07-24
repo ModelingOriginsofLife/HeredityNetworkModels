@@ -50,27 +50,28 @@ for i, fname in enumerate(os.listdir(DATA_PATH)):
 
     if SENSITIVITY:
         for k in range(16):
-            ti = k*200
-            tf = nmols + k*200
+            ti = 1+k
+            tf = 1+nmols+k
 
             # we just need as many timesteps as there are molecules
             A = mols[ti:tf, :]
 
             for j in range(nmols):
                 b = data[ti:tf, j]
-                x = np.linalg.solve(A, b)
-                mat[j] = x
+#                x = np.linalg.solve(A, b)
+                x = np.linalg.lstsq(A, b)[0]
+                mat[j,:] = np.transpose(x)
 
-            eigenvalues = np.linalg.eig(mat)[0]
-            eigen = len(np.where(np.absolute(eigenvalues) > 1.)[0])
-            print "%02d eigenvalues > 1. " % (eigen)
+            evals, evecs = np.linalg.eig(mat)
+            eigen = len(np.where(np.absolute(evals) > 1.)[0])
 
             p.figure()
-            p.plot(np.real(eigenvalues), np.imag(eigenvalues), 'bo')
-            p.xlim(-3, 3)
-            p.ylim(-3, 3)
+            p.plot(np.real(evals), np.imag(evals), 'bo')
+            #p.xlim(-3, 3)
+            #p.ylim(-3, 3)
             p.savefig(FIG_PATH+fname+'_'+str(ti)+'.png', bbox_inches='tight')
 
+            print "%02d eigenvalues > 1. " % (eigen)
 
     # we just want to do the full analysis just yet
     if i == 0:
