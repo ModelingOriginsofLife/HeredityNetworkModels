@@ -145,9 +145,10 @@ def range_results(m,start=1,stop=10):
 # Same as before, but we reimplement the algo to be able to reuse intermediate computations
 def range_results_optimized(m,start=1,stop=10):
 	l = []
-	statics = compute_proba(m) if isNormalized(m) else compute_stationary(m)
+	norm = isNormalized(m)
+	statics = compute_proba(m) if norm else compute_stationary(m)
 	path = NP.matrix(m)
-	popincrease = newpopsize(statics,matrix)
+	popincrease = 1.0 if norm else newpopsize(statics,m)
 	for i in range(stop-start+1):
 		value = 0.0
 		for a in range(len(m)):
@@ -181,5 +182,5 @@ def newpopsize(pop,mat):
 	popsize = 0.0	
 	for i in range(len(pop)):
 		for j in range(len(mat)):
-			popsize += pop[j]*mat[j][i]
+			popsize += pop[Symbol("p%i" % j)]*mat[j][i]
 	return popsize
