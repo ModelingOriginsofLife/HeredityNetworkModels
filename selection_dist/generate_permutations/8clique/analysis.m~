@@ -1,0 +1,8 @@
+A = load("vectors.txt");
+[coeff,score,latent] = princomp(A);
+
+threshold = latent(1)*0.5;
+
+count = size(find(latent > threshold));
+
+count
